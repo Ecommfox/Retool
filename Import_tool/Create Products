@@ -1,4 +1,6 @@
 curl
--d '{{XMLbody}}'
-- products/{{id}}?output_format=JSON&ps_method={{action}}
+-d '{{XMLbody}}'/
+-X PATCH "{{Prestashop_API}}/products/{{id}}?output_format=JSON&ps_method={{action}}" /
+-H"Content-Type: application/json" /
+-H "Authorization: Bearer your_access_token" 
 
