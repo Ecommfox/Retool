@@ -1,5 +1,7 @@
 curl 
 -d Form Data "image : {{[file_data]}}"
 -X POST "{{Prestashop_APi}}" \images/products/{{id}}?output_format=JSON
--H ""
+-H"Content-Type: application/form" 
+-H "Authorization: Bearer your_access_token" 
+
 
