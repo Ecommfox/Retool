@@ -76,6 +76,29 @@ let cats = rows[i].catégories ? rows[i].catégories : undefined;
             let MainCatXML = ''; 
             let featuresXML ='';
 
+            if (rows[i].caractéristiques ) {
+        featuresXML += `<product_features>`;
+        for (const item of rows[i].caractéristiques) {
+            if (item.value !== "") {
+                featuresXML += `<product_feature>`;
+                const FeatureId = findFeature(item.key);
+                if (FeatureId === null) continue; // Skip if feature not found
+                const featureExistingId = checkValueExists(item.value, FeatureId);
+                if (featureExistingId !== null) {
+                    featuresXML += `<id>${FeatureId}</id>
+                                    <id_feature_value>${featureExistingId}</id_feature_value>`;
+                } else {
+                    try {
+                        const res = await triggerPostFeaturesWithRetry({
+                            id_feature: FeatureId,
+                            value: item.value
+                        }, 3);
+                        featuresXML += `<id>${res.product_feature_value.id_feature}</id>
+                                        <id_feature_value>${res.product_feature_value.id}</id_feature_value>
+                  }
+            }
+            }
+            }
             if (rows[i].images) {
                 imagesXML += `<images>
                     <image>
@@ -243,7 +266,7 @@ let cats = rows[i].catégories ? rows[i].catégories : undefined;
                 <associations>
                 ${categoriesXML}
                 ${tagsXML}
-                ${featureXML}
+                ${featuresXML}
                 // features will have to be added separately 
                 </associations>
             </product>
