@@ -1,1 +1,3 @@
-
+curl 
+-X GET "{{image_url}}" \
+-H ""
