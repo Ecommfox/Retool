@@ -4,7 +4,7 @@ curl
                                     <custom><![CDATA[1]]></custom>
                                     <id_feature><![CDATA[${data.id_feature}]]></id_feature>
                                     <value>
-                                      <language id="1"><![CDATA[${data.value}]]></language>
+                                      <language id="1"><![CDATA[${feature.value}]]></language>
                                     </value>
                                   </product_feature_value>
                                 </prestashop>`'
