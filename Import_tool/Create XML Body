@@ -74,6 +74,7 @@ let cats = rows[i].catégories ? rows[i].catégories : undefined;
             let ecotax = '';
             let imagesXML = '';
             let MainCatXML = ''; 
+            let featuresXML ='';
 
             if (rows[i].images) {
                 imagesXML += `<images>
@@ -242,6 +243,8 @@ let cats = rows[i].catégories ? rows[i].catégories : undefined;
                 <associations>
                 ${categoriesXML}
                 ${tagsXML}
+                ${featureXML}
+                // features will have to be added separately 
                 </associations>
             </product>
             </prestashop>`;
