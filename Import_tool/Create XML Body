@@ -1,1 +1,248 @@
+var rows = localStorage.values.data;
 
+for(let i = 0;i<rows.length;i++) {
+
+let cats = rows[i].catégories ? rows[i].catégories : undefined;
+            let tags = rows[i]["mots-clés"] ? rows[i]["mots-clés"].split(',') : undefined;
+            // Construct XML for <categories> section
+            let categoriesXML = '';
+            if (cats && cats.length > 0) {
+                categoriesXML += '<categories>';
+                cats.forEach(cat => {
+                    if (transformer1.value != undefined) {
+                        var catInput = transformer1.value.filter(row => cat == row.hierarchy);
+                        catInput.forEach((input) => { categoriesXML += '<category><id>' + input.value + '</id></category>' });
+                    }
+                });
+                categoriesXML += '</categories>';
+            } else if (func == "importés") {
+                categoriesXML += `<categories>
+                    <category>
+                    <id><![CDATA[]]></id>
+                    </category>
+                </categories>`
+            }
+
+            // Same for tags
+            let tagsXML = '';
+            if (tags && tags.length > 0) {
+                tagsXML += '<tags>';
+                tags.forEach(tag => {
+                    var tagInput = Tags.data.find(row => row.tag_name == tag);
+                    if (tagInput != undefined) { tagsXML += '<tag><id>' + tagInput.value + '</id></tag>'; }
+                });
+                tagsXML += '</tags>';
+            } else if (func == "importés") {
+                tagsXML += `<tags>
+                    <tag>
+                    <id><![CDATA[]]></id>
+                    </tag>
+                </tags>`;
+            }
+            let widthXML = '';
+            let heightXML = '';
+            let depthXML = '';
+            let weightXML = '';
+            let url_slugXML = '';
+            let supplierXML = '';
+            let EAN13XML = '';
+            let VisibilitéXML = '';
+            let MarqueXML = '';
+            let nomXML = '';
+            let code_produitXML = '';
+            let prix_venteXML = '';
+            let en_soldesXML = '';
+            let regles_de_taxesXML = '';
+            let prix_achatXML = '';
+            let Unité_prix_unitaireXML = '';
+            let prix_untaireXML = '';
+            let quantité_minimumXML = '';
+            let descriptionXML = '';
+            let description_courteXML = '';
+            let balise_descriptionXML = '';
+            let balise_titreXML = '';
+            let balise_mots_clésXML = '';
+            let avalabilityXML = '';
+            let Frais_de_portXML = '';
+            let action_sold_outXML = '';
+            let EtatXML = '';
+            let PersonnalisableXML = '';
+            let fichiersXML = '';
+            let champs_texteXML = '';
+            let typeXML = '';
+            let lowstockXML = '';
+            let ecotax = '';
+            let imagesXML = '';
+            let MainCatXML = ''; 
+
+            if (rows[i].images) {
+                imagesXML += `<images>
+                    <image>
+                    <id><![CDATA[]]></id>
+                    </image>
+                </images>`
+            }
+            if (rows[i]["catégorie principale"]){
+           let MainCat = Categories.data.find(el=>rows[i]["catégorie principale"].trim().toLowerCase()== el.name.toLowerCase());
+           MainCatXML += '<id_category_default>' + (MainCat?MainCat.value:1) +'</id_category_default>'
+  console.log(rows[i]["catégorie principale"]+ "maincat here")
+            }
+       
+            if (rows[i].type) {
+                widthXML += ' <type>' + rows[i].type + '</type>'
+            }
+            if (rows[i].largeur) {
+                widthXML += ' <width>' + rows[i].largeur + '</width>'
+            }
+            if (rows[i].hauteur) {
+                heightXML += ' <height>' + rows[i].hauteur + '</height>'
+            }
+            if (rows[i].profondeur) {
+                depthXML += ' <depth>' + rows[i].profondeur + '</depth>'
+            }
+            if (rows[i].poids) {
+                weightXML += ' <poids>' + rows[i].poids + '</poids>' 
+            }
+            if (rows[i]["url simplifié"]) {
+                url_slugXML += '<link_rewrite><language id="1">' + rows[i]["url simplifié"] + '</language></link_rewrite>'
+            }
+            if (rows[i].Fournisseur) {
+                var suplier = Suppliers.data.find(row => row.supplier_name == rows[i].Fournisseur);
+                if (suplier !== undefined) {
+                    supplierXML += '<id_supplier>' + suplier.value + '</id_supplier>'
+                }
+            }
+            if (rows[i].EAN13) {
+                EAN13XML += '<ean13>' + rows[i].EAN13 + '</ean13>'
+            }
+            
+          VisibilitéXML += '<visibility>' + 'both' + '</visibility>'
+            
+            if (rows[i].Marque) {
+                var brand = Brands.data.find(row => row.brand_name == rows[i].Marque);
+                if (brand !== undefined) {
+                    MarqueXML += '<id_manufacturer>' + brand.value + '</id_manufacturer>'
+                }
+            }
+            if (rows[i].nom) {
+                nomXML += '<name><language id="1">' + rows[i].nom + '</language></name>'
+            }
+            if (rows[i]["code produit"]) {
+                code_produitXML += '<supplier_reference>' + rows[i]["code produit"] + '</supplier_reference>'
+            }
+            if (rows[i]["Prix vente HT"]) {
+                prix_venteXML += '<price>' + rows[i]["Prix vente HT"] + '</price>'
+            }
+            if (rows[i]["En soldes"]) {
+                en_soldesXML += '<on_sale>' + rows[i]["En soldes"] + '</on_sale>'
+            }
+            if (rows[i]["regles de taxes"]) {
+                regles_de_taxesXML += '<id_tax_rules_group>' + rows[i]["regles de taxes"] + '</id_tax_rules_group>'
+            }
+            if (rows[i]["Prix d'achat"]) {
+                prix_achatXML += '<wholesale_price>' + rows[i]["Prix d'achat"] + '</wholesale_price>'
+            }
+            if (rows[i]["Unité pour le prix unitaire"]) {
+                Unité_prix_unitaireXML += '<unity>' + rows[i]["Unité pour le prix unitaire"] + '</unity>'
+            }
+            if (rows[i]["prix unitaire"]) {
+                prix_untaireXML += ' <unit_price>' + rows[i]["prix unitaire"] + '</unit_price>'
+            }
+            if (rows[i]["Quantité minimum"]) {
+                quantité_minimumXML += '<minimal_quantity>' + rows[i]["Quantité minimum"] + '</minimal_quantity>'
+            }
+            if (rows[i].description) {
+                descriptionXML += '<description><language id="1">' + rows[i].description + '</language></description>'
+            }
+            if (rows[i]["description courte"]) {
+                description_courteXML += '<description_short><language id="1">' + rows[i]["description courte"] + '</language></description_short>'
+            }
+            if (rows[i]["balise meta description"]) {
+                balise_descriptionXML += ' <meta_description><language id="1">' + rows[i]["balise meta description"] + '</language></meta_description>'
+            }
+            if (rows[i]["balise meta titre"]) {
+                balise_titreXML += '<meta_title><language id="1">' + rows[i]["balise meta titre"] + '</language> </meta_title>'
+            }
+            if (rows[i]["balise meta mots-clés"]) {
+                balise_mots_clésXML += ' <meta_keywords><language id="1">' + rows[i]["balise meta mots-clés"] + '</language></meta_keywords>'
+            }
+            if (rows[i]["Disponible à la commande"]) {
+                avalabilityXML += '<available_for_order>' + rows[i]["Disponible à la commande"] + '</available_for_order>'
+            }
+            if (rows[i]["Frais de port sup"]) {
+                Frais_de_portXML += ' <additional_shipping_cost>' + rows[i]["Frais de port sup"] + ' </additional_shipping_cost>'
+            }
+            if (rows[i].État) {
+                EtatXML += '<condition>' + rows[i].État + '<condition>'
+            }
+            if (rows[i].Personnalisable) {
+                PersonnalisableXML += '<customizable>' + rows[i].Personnalisable + '</customizable>'
+            }
+            if (rows[i]["Fichiers téléchargeables"]) {
+                fichiersXML += ' <uploadable_files>' + rows[i]["Fichiers téléchargeables"] + ' </uploadable_files>'
+            }
+            if (rows[i]["Champs texte"]) {
+                champs_texteXML += '<text_fields>' + rows[i]["Champs texte"] + '</text_fields>'
+            }
+            if (rows[i]["Alerte stock bas"]) {
+                action_sold_outXML += '<low_stock_alert>' + rows[i]["Alerte stock bas"] + '</low_stock_alert>'
+            }
+            if (rows[i]["stock bas"]) {
+                lowstockXML += '<low_stock_threshold>' + rows[i]["stock bas"] + '</low_stock_threshold>'
+            }
+            if (rows[i.ecotax]) {
+                ecotax += '<ecotax>' + rows[i.ecotax] + '</ecotax>'
+            }
+
+            const body = `<prestashop xmlns:xlink="http://www.w3.org/1999/xlink">
+            <product>
+                <id><![CDATA[]]></id>
+                <reference>${rows[i].ID}</reference>
+                ${MarqueXML}
+                ${supplierXML}
+                ${MainCatXML}
+                ${EtatXML}
+                <id_tax_rules_group><![CDATA[${rows[i]["regles de taxes"] ? rows[i]["regles de taxes"] : 1}]]></id_tax_rules_group>
+                ${typeXML}
+                <id_shop_default><![CDATA[1]]></id_shop_default>
+                ${code_produitXML}
+                ${widthXML}
+                ${heightXML}
+                ${depthXML}
+                ${weightXML}
+                ${EAN13XML}
+                <state><![CDATA[1]]></state>
+                ${en_soldesXML}
+                ${quantité_minimumXML}
+                ${lowstockXML}
+                ${action_sold_outXML}
+                ${prix_venteXML}
+                ${prix_achatXML}
+                ${prix_untaireXML}
+                ${Unité_prix_unitaireXML}
+                ${Frais_de_portXML}
+                ${PersonnalisableXML}
+                ${champs_texteXML}
+                ${fichiersXML}
+              <available_for_order>1</available_for_order>
+                <indexed>1</indexed> 
+                <active><![CDATA[${checkbox1.value == false ? "0" : "1"}]]></active>
+                <show_price><![CDATA[1]]></show_price>
+                ${avalabilityXML}
+                ${EtatXML}
+                ${VisibilitéXML}
+                ${balise_descriptionXML}
+                ${balise_mots_clésXML}
+                ${balise_titreXML}
+                ${url_slugXML}
+                ${nomXML}
+                ${ecotax}
+                ${descriptionXML}
+                ${description_courteXML}
+                <associations>
+                ${categoriesXML}
+                ${tagsXML}
+                </associations>
+            </product>
+            </prestashop>`;
+}
