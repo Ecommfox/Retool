@@ -1,0 +1,15 @@
+curl 
+-d '<?xml version="1.0" encoding="UTF-8"?>
+ <prestashop xmlns:xlink="http://www.w3.org/1999/xlink">
+  <product>
+   <id>{{product.id}}</id>
+  <associations> 
+         {{features}}
+        </associations>
+    </product>
+</prestashop>'
+-X PATCH "{{Prestashop_API}}/products/{{product.id}}?output_format=JSON"
+-H"Content-Type: application/json" 
+-H "Authorization: Bearer your_access_token" 
+
+ 
