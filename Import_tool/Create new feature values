@@ -2,9 +2,9 @@ curl
 -d '`<prestashop xmlns:xlink="http://www.w3.org/1999/xlink">
                                   <product_feature_value>
                                     <custom><![CDATA[1]]></custom>
-                                    <id_feature><![CDATA[${data.id_feature}]]></id_feature>
+                                    <id_feature><![CDATA[${feature_id}]]></id_feature>
                                     <value>
-                                      <language id="1"><![CDATA[${feature.value}]]></language>
+                                      <language id="1"><![CDATA[${feature_value}]]></language>
                                     </value>
                                   </product_feature_value>
                                 </prestashop>`'
