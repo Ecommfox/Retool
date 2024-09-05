@@ -1,4 +1,5 @@
 var rows = localStorage.values.data;
+//change this to whichever value matches the product array
 
 for(let i = 0;i<rows.length;i++) {
 
