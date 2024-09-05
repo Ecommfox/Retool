@@ -1,4 +1,4 @@
 curl -d \
--X GET "{{Prestashop_API}}/filter[reference]={{product.reference}}&output_format=JSON" \
+-X GET "{{Prestashop_API}}/products/filter[reference]={{product.reference}}&output_format=JSON" \
 -H "Authorization: Bearer your_access_token" \
 -H "Content-Type: application/json"
