@@ -1,1 +1,6 @@
+const Newrule={columnName:ModalbuttonEvent.value,ruleType:container5.currentViewKey,selectAction:radioGroup1.value,fieldToFind: ConditionBlock.data.map((item,i)=>
+   {return select3[i].value;}),condition:ConditionBlock.data.map((item,i)=>{return select4[i].value}),textToFind:ConditionBlock.data.map((item,i)=>{return textInput1[i].value}),textToReplace:ModalbuttonEvent.value=="catégories"?multiselect9.value:textInput2.value,optionToDelete:select7.value,typeToDelete:select8.value,stringToDelete: textInput6.value,transformType:select5.value,transformKey:select6.value,separator:textInput4.value,replaceOption:select13.value, replaceKey:textInput8.value,replaceValue:textInput7.value,selectReplace:radioGroup2.value,fieldToCalc: select15.value, mathFormula:textInput10.value,endifCheck:toggleLink1[0].value,cell:select29.value}
+
+ruleInputs.setIn([ruleInputs.value.length],Newrule)
+
 
