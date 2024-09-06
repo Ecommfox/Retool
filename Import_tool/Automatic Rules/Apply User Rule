@@ -1,1 +1,216 @@
+function applyUserRule(data, originalText, rule) {
+    // Get form values
+    var fieldToFind = rule.fieldToFind.map(field => data[field]);
+    var fieldToCalc = data[rule.fieldToCalc];
+    var mathFormula = rule.mathFormula;
+    var ruleType = rule.ruleType;
+    var condition = rule.condition;
+    var selectAction = rule.selectAction;
+    var textToFind = rule.textToFind;
+    var textToReplace = rule.textToReplace;
+    var transformType = rule.transformType;
+    var transformKey = rule.transformKey;
+    var separatorKey = rule.separator;
+    var optionToDelete = rule.optionToDelete;
+    var typeToDelete = rule.typeToDelete;
+    var stringToDelete = rule.stringToDelete;
+    var replaceOption = rule.replaceOption;
+    var replaceKey = rule.replaceKey;
+    var replaceValue = rule.replaceValue;
+    var selectedReplaceOption = rule.selectReplace;
+    var endif = rule.endifCheck;
 
+    function escapeSymbols(text) {
+        return text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    }
+
+    function expression(formula) {
+        try {
+            return math.evaluate(formula);
+        } catch (error) {
+            console.error("Error evaluating expression:", error);
+            return 0; // or handle the error as needed
+        }
+    }
+
+    function checkCondition(condition, fieldToFind, textToFind) {
+        switch (condition) {
+            case 'contains':
+                return fieldToFind.includes(textToFind);
+            case 'doesNotContain':
+                return !fieldToFind.includes(textToFind);
+            case 'equals':
+                return fieldToFind === textToFind;
+            case 'doesNotEqual':
+                return fieldToFind !== textToFind;
+            case 'isEmpty':
+                return fieldToFind == "";
+            case 'isNotEmpty':
+                return fieldToFind !== "";
+            case 'isLower':
+                return parseFloat(fieldToFind) < parseFloat(textToFind);
+            case 'isHigher':
+                return parseFloat(fieldToFind) > parseFloat(textToFind);
+            default:
+                return false;
+        }
+    }
+
+    function evaluateConditions(conditions, fields, texts, logicalAnd) {
+        if (conditions.length === 0) return false; // or true based on your logic for no conditions
+
+        let result = checkCondition(conditions[0], fields[0], escapeSymbols(texts[0]));
+
+        for (let i = 1; i < conditions.length; i++) {
+            if (logicalAnd) {
+                result = result && checkCondition(conditions[i], fields[i], escapeSymbols(texts[i]));
+            } else {
+                result = result || checkCondition(conditions[i], fields[i], escapeSymbols(texts[i]));
+            }
+
+            // Early exit for logical AND
+            if (logicalAnd && !result) return false;
+        }
+
+        return result;
+    }
+
+    function replaceStartingFrom(originalText, replaceKey, replaceValue) {
+        let regexCustomValue = new RegExp(`(?=${replaceKey}\\s*).*`, "gms");
+        return originalText.replace(regexCustomValue, replaceValue);
+    }
+
+    function replaceUntil(originalText, replaceKey, replaceValue) {
+        let regexCustomValue1 = new RegExp(`.*?(?<=${replaceKey}.*)`, "gms");
+        return originalText.replace(regexCustomValue1, replaceValue);
+    }
+
+    function replaceUniqueValue(originalText, replaceKey, replaceValue) {
+        let regexCustomValue2 = new RegExp(`${replaceKey}`, "g");
+        return originalText.replace(regexCustomValue2, replaceValue);
+    }
+
+ function replaceByRegex(originalText, replaceKey, replaceValue) {
+    // Constructing a RegExp object from the replaceKey string
+    let regexPattern;
+    let match;
+    switch(replaceKey){
+      case "dimensions valeur":
+  function convertSize(text) {
+     regexPattern = /(\d+(?:[\.,]\d+)?)\s*[xX]\s*(\d+(?:[\.,]\d+)?)(?:\s*[xX]\s*(\d+(?:[\.,]\d+)?))?/g;
+     match = text.match(regexPattern);
+    text =  match[0] + ' ' + replaceValue;
+   return text
+  }
+   originalText = convertSize(originalText)
+     break;
+      case "euro":
+       function convertEur(text, replaceValue) {
+    // Define the regular expression with the global and dotall flags
+    const regexPattern = /\d+(\.\d+)?/g;
+    // Find all matches in the text
+    const matches = text.match(regexPattern);
+
+    // Check if there are any matches
+    if (matches) {
+        // Iterate through each match and replace it with the formatted currency value
+        for (let match of matches) {
+            // Convert the matched number to a float
+            const number = parseFloat(match);
+            // Format the number as currency in Euro style
+            const formattedNumber = number.toLocaleString('de-DE', { style: 'currency', currency: replaceValue });
+            // Replace the number in the text with the formatted currency value
+            text = text.replace(match, formattedNumber);
+        }
+    }
+
+    return text;
+}
+originalText = convertEur(originalText, replaceValue)
+      break;
+      case"detect":
+       function detectSize(text) {
+    // Define the regex pattern
+     const pattern = /(\d+(?:\.\d+)?)\s*[xX]\s*(\d+(?:\.\d+)?)(?:\s*[xX]\s*(\d+(?:\.\d+)?))?/g;
+    const matches = text.matchAll(pattern);
+    
+    const shapes = [];
+    for (const match of matches) {
+        const length = parseFloat(match[1]);
+        const width = parseFloat(match[2]);
+        const height = match[3] !== undefined ? parseFloat(match[3]) : null;
+        let shape;
+        
+        if (height !== null) {
+            shape = 'autre';
+        } else if (length === width) {
+            shape = 'carré';
+        } else {
+            shape = 'rectangle';
+        }
+        
+        shapes.push({ length, width, shape });
+    }
+    
+    return shapes[0].shape;
+}
+originalText = detectSize(originalText)
+      break;
+      default:
+      function convertDefault(text) {
+     regexPattern = /(\d+(?:\.\d+)?)/g;
+     match = text.match(regexPattern);
+    text =  match[0] + ' ' + replaceValue
+   return text
+  }
+   originalText = convertDefault(originalText)
+    break;
+}
+return originalText
+}
+
+
+    function replaceSpaces(originalText, replaceValue) {
+        let regexPattern = new RegExp('\\s+', "g");
+        return originalText.replace(regexPattern, replaceValue);
+    }
+
+function transformNumbersToDecimals(input) {
+    const numberRegex = /-?\d+(\.\d*)?\b/g;
+
+    try {
+        let inputString = input.toString(); // Convert the input to a string
+
+        // Use matchAll to get an iterator for all matches
+        const matchesIterator = inputString.matchAll(numberRegex);
+        const matches = [...matchesIterator];
+
+        // Iterate through the matches in reverse order to replace them in the input string
+        for (const match of matches.reverse()) {
+            const original = match[0];
+            const index = match.index;
+
+            // Convert the matched string to a float
+            const decimalNumber = parseFloat(original);
+            // Format the number with two decimal places
+            const formattedNumber = decimalNumber.toFixed(2);
+
+            // Replace the original number with the formatted number in the input string
+            inputString = inputString.slice(0, index) + formattedNumber + inputString.slice(index + original.length);
+        }
+
+        return inputString;
+    } catch (error) {
+        // If any error occurs, return the original input string
+        console.log(error.message);
+        return input;
+    }
+}
+
+//end of functions for eact rule type //////////////////////////////////////////
+ //
+//
+//
+//
+//
+//   
